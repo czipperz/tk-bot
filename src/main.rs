@@ -42,6 +42,21 @@ fn post(text: String) -> Result<(), Error> {
     Ok(())
 }
 
+fn port() -> u16 {
+    std::env::var("PORT")
+        .map(|p| p.parse().unwrap())
+        .unwrap_or(5000)
+}
+
+fn try_main() -> Result<(), rocket::config::ConfigError> {
+    let environment = rocket::config::Environment::active()?;
+    let config = rocket::config::Config::build(environment)
+        .port(port())
+        .unwrap();
+    rocket::custom(config).mount("/", routes![respond]).launch();
+    Ok(())
+}
+
 fn main() {
-    rocket::ignite().mount("/", routes![respond]).launch();
+    try_main().unwrap();
 }
