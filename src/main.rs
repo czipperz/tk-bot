@@ -33,7 +33,7 @@ fn bot_id() -> Result<String, std::env::VarError> {
 
 fn post(text: String) -> Result<(), Error> {
     reqwest::Client::new()
-        .post("api.groupme.com/v3/bots/post")
+        .post("http://api.groupme.com/v3/bots/post")
         .json(&Message {
             bot_id: bot_id()?,
             text,
