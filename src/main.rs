@@ -2,8 +2,9 @@
 
 #[macro_use] extern crate rocket;
 
-#[get("/")]
-fn respond() {
+#[post("/", data = "<request>")]
+fn respond(request: String) -> String {
+    request
 }
 
 fn main() {
