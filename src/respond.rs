@@ -28,7 +28,7 @@ pub struct Request {
     user_id: String,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, PartialEq)]
 pub struct Message {
     text: String,
 }
