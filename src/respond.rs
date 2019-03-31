@@ -1,13 +1,12 @@
 use crate::error::Error;
-use crate::post::post;
 use crate::Attachment;
 use serde::{Deserialize, Serialize};
 
-pub fn try_respond(request: Request) -> Result<(), Error> {
+pub fn try_respond(request: Request) -> Result<Option<Message>, Error> {
     if request.text == "Hello TK" {
-        post("ABC".into())
+        Ok(Some("ABC".into()))
     } else {
-        Ok(())
+        Ok(None)
     }
 }
 

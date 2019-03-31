@@ -12,13 +12,18 @@ mod respond;
 use respond::*;
 
 mod post;
+use post::post;
 
 #[derive(Deserialize)]
 struct Attachment;
 
 #[post("/", data = "<request>")]
 fn respond(request: Json<Request>) {
-    try_respond(request.into_inner()).unwrap();
+    match try_respond(request.into_inner()) {
+        Ok(Some(message)) => post(message),
+        Ok(None) => Ok(()),
+        Err(e) => Err(e),
+    }.unwrap()
 }
 
 fn port() -> u16 {
