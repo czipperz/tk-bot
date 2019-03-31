@@ -5,5 +5,5 @@ authors = ["Chris Gregory <czipperz@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-reqwest = "*"
-rocket = "*"
+reqwest = "0.9.12"
+rocket = "0.4.0"
