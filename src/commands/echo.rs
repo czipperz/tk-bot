@@ -3,7 +3,7 @@ use crate::error::Error;
 use crate::respond::Message;
 
 fn run(input: &str) -> Result<Option<Message>, Error> {
-    Ok(Some(input[5..].into()))
+    Ok(input.find(' ').map(|index| input[index..].into()))
 }
 
 pub fn echo() -> Command {
