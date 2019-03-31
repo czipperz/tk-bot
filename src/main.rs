@@ -2,43 +2,78 @@
 
 #[macro_use]
 extern crate rocket;
-use rocket::Data;
+use rocket_contrib::json::Json;
 
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 mod error;
 use error::Error;
 
-#[post("/", data = "<request>")]
-fn respond(request: Data) {
-    try_respond(request).unwrap();
-}
+#[derive(Deserialize)]
+struct Attachment;
 
-fn try_respond(request: Data) -> Result<(), Error> {
-    use std::io::Read;
-    let mut text = String::new();
-    request.open().read_to_string(&mut text)?;
-    post(text)
-}
-
-#[derive(Serialize)]
-struct Message {
-    bot_id: String,
+#[derive(Deserialize)]
+struct Request {
+    attachments: Vec<Attachment>,
+    avatar_url: String,
+    created_at: i32,
+    group_id: String,
+    id: String,
+    name: String,
+    sender_id: String,
+    sender_type: String,
+    source_guid: String,
+    system: bool,
     text: String,
+    user_id: String,
+}
+
+#[post("/", data = "<request>")]
+fn respond(request: Json<Request>) {
+    try_respond(request.into_inner()).unwrap();
+}
+
+fn try_respond(request: Request) -> Result<(), Error> {
+    if request.text == "Hello TK" {
+        post("ABC".into())
+    } else {
+        Ok(())
+    }
+}
+
+#[derive(Debug, Serialize)]
+struct Message {
+    text: String,
+}
+
+impl<S: ToString> From<S> for Message {
+    fn from(text: S) -> Message {
+        Message {
+            text: text.to_string(),
+        }
+    }
+}
+
+#[derive(Debug, Serialize)]
+struct IDMessage {
+    bot_id: String,
+    #[serde(flatten)]
+    message: Message,
 }
 
 fn bot_id() -> Result<String, std::env::VarError> {
     std::env::var("BOT_ID")
 }
 
-fn post(text: String) -> Result<(), Error> {
-    println!("Posting {}", text);
+fn post(message: Message) -> Result<(), Error> {
+    let message = IDMessage {
+        bot_id: bot_id()?,
+        message,
+    };
+    println!("Posting {:?}", message);
     reqwest::Client::new()
-        .post("http://api.groupme.com/v3/bots/post")
-        .json(&Message {
-            bot_id: bot_id()?,
-            text,
-        })
+        .post("https://api.groupme.com/v3/bots/post")
+        .json(&message)
         .send()?;
     Ok(())
 }
