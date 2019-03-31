@@ -1,13 +1,15 @@
 use crate::error::Error;
+use crate::commands::commands;
 use crate::Attachment;
 use serde::{Deserialize, Serialize};
 
 pub fn try_respond(request: Request) -> Result<Option<Message>, Error> {
-    if request.text == "Hello TK" {
-        Ok(Some("ABC".into()))
-    } else {
-        Ok(None)
+    for command in commands() {
+        if command.regex.is_match(&request.text) {
+            return (command.run)(&request.text);
+        }
     }
+    Ok(None)
 }
 
 #[derive(Deserialize)]

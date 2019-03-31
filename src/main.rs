@@ -6,6 +6,7 @@ use rocket_contrib::json::Json;
 
 use serde::Deserialize;
 
+mod commands;
 mod error;
 
 mod respond;
