@@ -14,7 +14,7 @@ pub fn try_respond(request: Request) -> Result<(), Error> {
 #[derive(Deserialize)]
 pub struct Request {
     attachments: Vec<Attachment>,
-    avatar_url: String,
+    avatar_url: Option<String>,
     created_at: i32,
     group_id: String,
     id: String,
