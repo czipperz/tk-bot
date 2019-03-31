@@ -1,0 +1,11 @@
+{
+    "name": "TK Bot",
+    "description": "Theta Kappa Groupme Bot",
+    "repository": "https://github.com/czipperz/tk-bot",
+    "success_url": "/",
+    "keywords": ["rust", "rocket"],
+    "website": "https://github.com/czipperz/tk-bot",
+    "env": {
+        "BUILDPACK_URL": "https://github.com/emk/heroku-buildpack-rust.git"
+    }
+}
